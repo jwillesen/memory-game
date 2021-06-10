@@ -2,7 +2,7 @@
   --row: 0;
   --col: 0;
 
-  position: relative;
+  display: inline-block;
   transition: transform 0.5s;
   transform: translate(
     calc((var(--cardWidth) + var(--gap)) * var(--col)),
@@ -11,9 +11,10 @@
 }
 
 .face {
+  backface-visibility: hidden;
+
   position: absolute;
   transition: transform 0.5s;
-  backface-visibility: hidden;
 
   display: flex;
   justify-content: center;
@@ -32,7 +33,7 @@
     rgba(253, 29, 29, 0.5) 50%,
     rgba(252, 176, 69, 0.5) 100%
   );
-  font-size: 2.5rem;
+  font-size: 4rem;
 }
 
 .back {
