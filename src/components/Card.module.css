@@ -1,0 +1,27 @@
+.face {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  width: 100px;
+  height: 100px;
+  transition: transform 1s;
+  backface-visibility: hidden;
+}
+
+.front {
+  position: absolute;
+  transform: rotate3d(0, 1, 0, 180deg);
+}
+
+.back {
+  position: absolute;
+}
+
+.faceup.back {
+  transform: rotate3d(0, 1, 0, 180deg);
+}
+
+.faceup.front {
+  transform: rotate3d(0, 1, 0, 0deg);
+}
