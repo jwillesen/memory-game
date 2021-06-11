@@ -1,12 +1,12 @@
 import { store } from "./pullstate"
+import { dealAnimationDelay, nCols } from "./constants"
 
 export interface GameState {
   enter: () => void
   exit: () => void
   transition: (newGameState: GameState) => void
   startGame: () => void
-  finishDealing: () => void
-  clickCard: (cardId: string) => void
+  clickCard: (cardId: number) => void
 }
 
 export class BaseGameState implements GameState {
@@ -20,8 +20,7 @@ export class BaseGameState implements GameState {
     newGameState.enter()
   }
   startGame = () => {}
-  finishDealing = () => {}
-  clickCard = (cardId: string) => {}
+  clickCard = (cardId: number) => {}
 }
 
 export const InitialGameState = Object.freeze(
@@ -38,6 +37,24 @@ export const DealingState = Object.freeze(
       store.update(s => {
         s.dealingAnimationIndex = 0
       })
+      this.dealCard()
+    }
+
+    dealCard = () => {
+      const state = store.getRawState()
+      const index = state.dealingAnimationIndex
+      if (index >= state.cards.length) this.finishDealing()
+      else {
+        store.update(s => {
+          s.cards[s.dealingAnimationIndex].row =
+            Math.floor(s.dealingAnimationIndex / nCols) + 1
+          s.cards[s.dealingAnimationIndex].col = Math.floor(
+            s.dealingAnimationIndex % nCols
+          )
+          s.dealingAnimationIndex += 1
+        })
+        setTimeout(this.dealCard, dealAnimationDelay)
+      }
     }
 
     finishDealing = () => {
@@ -48,7 +65,7 @@ export const DealingState = Object.freeze(
 
 export const FlipperState = Object.freeze(
   new (class extends BaseGameState {
-    clickCard = (cardId: string) => {
+    clickCard = (cardId: number) => {
       store.update(s => {
         s.cards[cardId].faceup = !s.cards[cardId].faceup
       })

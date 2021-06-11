@@ -2,6 +2,11 @@
   --row: 0;
   --col: 0;
 
+  --borderWidth: 2px;
+
+  width: calc(var(--cardWidth) + var(--borderWidth) * 2);
+  height: calc(var(--cardHeight) + var(--borderWidth) * 2);
+
   display: inline-block;
   position: absolute;
   top: 0;
@@ -11,6 +16,21 @@
     calc((var(--cardWidth) + var(--gap)) * var(--col)),
     calc((var(--cardHeight) + var(--gap)) * var(--row))
   );
+}
+
+.card:focus {
+  outline: none;
+}
+
+.card:focus-visible::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  bottom: -8px;
+  left: -8px;
+  border: var(--borderWidth) solid blue;
+  border-radius: 1.5rem;
 }
 
 .face {
@@ -24,7 +44,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid black;
+  border: var(--borderWidth) solid black;
   border-radius: 1rem;
   width: var(--cardWidth);
   height: var(--cardHeight);
