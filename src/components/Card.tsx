@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from "react"
 import classnames from "classnames"
 import { store } from "../pullstate"
-import { nCards, nCols } from "../constants"
+import { nCols } from "../constants"
+import { moveCardFocus } from "../utils"
 import SrOnly from "./SrOnly"
 
 import styles from "./Card.module.css"
@@ -26,25 +27,17 @@ export default function Card({ cardId }: Props) {
     store.getRawState().gameState.clickCard(cardId)
   }
 
-  const moveFocus = (targetId: number) => {
-    if (targetId < 0 || targetId >= nCards) return
-    const elts: NodeListOf<HTMLElement> = document.querySelectorAll(
-      `.${styles.card}`
-    )
-    elts[targetId].focus()
-  }
-
   const handleKeyDown: React.KeyboardEventHandler = e => {
     if (e.key === "Enter" || e.key === " ") {
       handleClick()
     } else if (e.key === "ArrowDown") {
-      moveFocus(cardId + nCols)
+      moveCardFocus(cardId, nCols)
     } else if (e.key === "ArrowUp") {
-      moveFocus(cardId - nCols)
+      moveCardFocus(cardId, -nCols)
     } else if (e.key === "ArrowRight") {
-      moveFocus(cardId + 1)
+      moveCardFocus(cardId, 1)
     } else if (e.key === "ArrowLeft") {
-      moveFocus(cardId - 1)
+      moveCardFocus(cardId, -1)
     }
   }
 

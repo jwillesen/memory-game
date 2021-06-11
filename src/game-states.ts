@@ -1,5 +1,6 @@
 import { store, Card } from "./pullstate"
 import { dealAnimationDelay, nCols } from "./constants"
+import { getCardElements, moveCardFocus } from "./utils"
 
 export interface GameState {
   enter: () => void
@@ -114,6 +115,12 @@ export const MatchCheck = Object.freeze(
             s.cards[secondCard.id].faceup = false
             s.cards[secondCard.id].solved = true
           })
+          const cardElts = getCardElements()
+          const focusedIndex = cardElts.findIndex(
+            elt => elt === document.activeElement
+          )
+          const focused = moveCardFocus(focusedIndex, -1)
+          if (!focused) moveCardFocus(focusedIndex, 1)
         } else {
           store.update(s => {
             s.cards[firstCard.id].faceup = false
