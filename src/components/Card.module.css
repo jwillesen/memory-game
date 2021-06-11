@@ -3,7 +3,10 @@
   --col: 0;
 
   display: inline-block;
-  transition: transform 0.5s;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: transform 0.75s;
   transform: translate(
     calc((var(--cardWidth) + var(--gap)) * var(--col)),
     calc((var(--cardHeight) + var(--gap)) * var(--row))
@@ -14,7 +17,9 @@
   backface-visibility: hidden;
 
   position: absolute;
-  transition: transform 0.5s;
+  top: 0;
+  left: 0;
+  transition: transform 0.75s;
 
   display: flex;
   justify-content: center;

@@ -1,16 +1,17 @@
-import { useState, useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import classnames from "classnames"
+import { store } from "../pullstate"
 
 import styles from "./Card.module.css"
 
 export interface Props {
-  value: string
+  cardId: string
   row: number
   col: number
 }
 
-export default function Card({ value, row, col }: Props) {
-  const [faceup, setFaceup] = useState(false)
+export default function Card({ cardId, row, col }: Props) {
+  const { faceup, iconId } = store.useState(s => s.cards[cardId])
   const cardRef = useRef<HTMLDivElement>(null)
 
   const frontStyles = classnames({
@@ -35,10 +36,12 @@ export default function Card({ value, row, col }: Props) {
     <div
       ref={cardRef}
       className={styles.card}
-      onClick={() => setFaceup(fu => !fu)}
+      onClick={() => store.getRawState().gameState.clickCard(cardId)}
     >
       <div className={backStyles} />
-      <div className={frontStyles}>{value}</div>
+      <div className={frontStyles}>
+        <i className={`far fa-${iconId}`} />
+      </div>
     </div>
   )
 }

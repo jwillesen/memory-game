@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
+import { store } from "../pullstate"
+import { FlipperState } from "../game-states"
 import Card from "./Card"
 import { nRows, nCols, dealAnimationDelay } from "../constants"
 
@@ -9,15 +11,24 @@ for (let i = 0; i < nRows * nCols; ++i) {
   cardIndexes.push(i)
 }
 
-const cardValues = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
-
 export default function Grid() {
-  const [animationIndex, setAnimationIndex] = useState(0)
+  const dealingAnimationIndex = store.useState(s => s.dealingAnimationIndex)
 
   useEffect(() => {
-    if (animationIndex >= cardIndexes.length) return
-    setTimeout(() => setAnimationIndex(i => i + 1), dealAnimationDelay)
-  }, [animationIndex])
+    if (dealingAnimationIndex >= cardIndexes.length) {
+      store.update(s => {
+        s.gameState = FlipperState
+      })
+    } else if (dealingAnimationIndex >= 0) {
+      setTimeout(() => {
+        store.update(s => {
+          s.dealingAnimationIndex += 1
+        })
+      }, dealAnimationDelay)
+    } else {
+      // do nothing
+    }
+  }, [dealingAnimationIndex])
 
   return (
     <div className={styles.grid}>
@@ -25,9 +36,11 @@ export default function Grid() {
         return (
           <Card
             key={index}
-            value={cardValues[Math.floor(index / 2)]}
-            row={animationIndex > index ? Math.floor(index / nCols) + 1 : 0}
-            col={animationIndex > index ? Math.floor(index % nCols) : 0}
+            cardId={index.toString()}
+            row={
+              dealingAnimationIndex > index ? Math.floor(index / nCols) + 1 : 0
+            }
+            col={dealingAnimationIndex > index ? Math.floor(index % nCols) : 0}
           />
         )
       })}
