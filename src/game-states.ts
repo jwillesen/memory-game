@@ -1,4 +1,4 @@
-import { store } from "./pullstate"
+import { store, Card } from "./pullstate"
 import { dealAnimationDelay, nCols } from "./constants"
 
 export interface GameState {
@@ -58,7 +58,70 @@ export const DealingState = Object.freeze(
     }
 
     finishDealing = () => {
-      this.transition(FlipperState)
+      this.transition(SelectFirstCard)
+    }
+  })()
+)
+
+type CardWithIndex = Card & { id: number }
+
+export const SelectFirstCard = Object.freeze(
+  new (class extends BaseGameState {
+    clickCard = (cardId: number) => {
+      const card = store.getRawState().cards[cardId]
+      if (!card || card.faceup || card.solved) return
+      store.update(s => {
+        s.cards[cardId].faceup = true
+      })
+      this.transition(SelectSecondCard)
+    }
+  })()
+)
+
+export const SelectSecondCard = Object.freeze(
+  new (class extends BaseGameState {
+    clickCard = (cardId: number) => {
+      const state = store.getRawState()
+      const card = state.cards[cardId]
+      if (!card || card.faceup || card.solved) return
+      store.update(s => {
+        s.cards[cardId].faceup = true
+      })
+      this.transition(MatchCheck)
+    }
+  })()
+)
+
+export const MatchCheck = Object.freeze(
+  new (class extends BaseGameState {
+    enter = () => {
+      setTimeout(() => {
+        const [firstCard, secondCard] = store
+          .getRawState()
+          .cards.reduce((memo, card, index) => {
+            if (card.faceup) memo.push({ id: index, ...card })
+            return memo
+          }, [] as CardWithIndex[])
+
+        if (firstCard.value === secondCard.value) {
+          store.update(s => {
+            s.cards[firstCard.id].col = 0
+            s.cards[firstCard.id].row = 0
+            s.cards[firstCard.id].faceup = false
+            s.cards[firstCard.id].solved = true
+            s.cards[secondCard.id].col = 0
+            s.cards[secondCard.id].row = 0
+            s.cards[secondCard.id].faceup = false
+            s.cards[secondCard.id].solved = true
+          })
+        } else {
+          store.update(s => {
+            s.cards[firstCard.id].faceup = false
+            s.cards[secondCard.id].faceup = false
+          })
+        }
+        this.transition(SelectFirstCard)
+      }, 1000)
     }
   })()
 )
