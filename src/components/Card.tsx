@@ -12,7 +12,7 @@ export interface Props {
 }
 
 export default function Card({ cardId }: Props) {
-  const { faceup, iconId, value, row, col } = store.useState(
+  const { faceup, solved, iconId, value, row, col } = store.useState(
     s => s.cards[cardId]
   )
   const cardRef = useRef<HTMLDivElement>(null)
@@ -57,8 +57,8 @@ export default function Card({ cardId }: Props) {
     <div
       ref={cardRef}
       className={styles.card}
-      role="button"
-      tabIndex={0}
+      role={solved ? "" : "button"}
+      tabIndex={solved ? -1 : 0}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       aria-live="polite"

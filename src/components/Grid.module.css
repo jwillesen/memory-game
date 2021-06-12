@@ -4,3 +4,11 @@
   margin: 24px;
   position: relative;
 }
+
+.helpText {
+  height: calc(var(--cardHeight) + var(--borderWidth) * 2);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 3rem;
+}

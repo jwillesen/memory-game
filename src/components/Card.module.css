@@ -2,8 +2,6 @@
   --row: 0;
   --col: 0;
 
-  --borderWidth: 2px;
-
   width: calc(var(--cardWidth) + var(--borderWidth) * 2);
   height: calc(var(--cardHeight) + var(--borderWidth) * 2);
 

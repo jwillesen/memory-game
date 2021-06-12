@@ -1,6 +1,16 @@
 import { store } from "./pullstate"
 import { nCards } from "./constants"
+import { Card } from "./pullstate"
 import cardStyles from "./components/Card.module.css"
+
+export type CardWithIndex = Card & { id: number }
+
+export function getFaceupCards(): CardWithIndex[] {
+  return store.getRawState().cards.reduce((memo, card, index) => {
+    if (card.faceup) memo.push({ id: index, ...card })
+    return memo
+  }, [] as CardWithIndex[])
+}
 
 export const getCardElements = (): HTMLElement[] => {
   const elts: NodeListOf<HTMLElement> = document.querySelectorAll(

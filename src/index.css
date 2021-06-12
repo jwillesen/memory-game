@@ -4,6 +4,7 @@
   --nRows: 4;
   --cardWidth: 100px;
   --cardHeight: 100px;
+  --borderWidth: 2px;
 }
 
 body {
