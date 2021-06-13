@@ -1,4 +1,5 @@
 .grid {
+  display: inline-block;
   height: calc((var(--cardHeight) + var(--gap)) * (var(--nRows) + 1));
   width: calc((var(--cardWidth) + var(--gap)) * var(--nCols));
   margin: 24px;
