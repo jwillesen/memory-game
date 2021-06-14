@@ -1,3 +1,4 @@
+import _shuffle from "lodash/shuffle"
 import { store } from "./pullstate"
 import { dealAnimationDelay, nCols } from "./constants"
 import { getCardElements, getFaceupCards, moveCardFocus } from "./utils"
@@ -7,6 +8,7 @@ export interface GameState {
   exit: () => void
   transition: (newGameState: GameState) => void
   gameStateMessage: () => string
+  gameOver: () => boolean
   startGame: () => void
   clickCard: (cardId: number) => void
 }
@@ -22,6 +24,7 @@ export class BaseGameState implements GameState {
     newGameState.enter()
   }
   gameStateMessage = () => "« Base Game State »"
+  gameOver = () => false
   startGame = () => {}
   clickCard = (cardId: number) => {}
 }
@@ -38,6 +41,8 @@ export const DealingState = Object.freeze(
   new (class extends BaseGameState {
     enter = () => {
       store.update(s => {
+        s.cards.forEach(card => (card.solved = false))
+        s.cards = _shuffle(s.cards)
         s.dealingAnimationIndex = 0
       })
       this.dealCard()
@@ -164,6 +169,7 @@ export const CardsDoNotMatch = Object.freeze(
 export const GameOver = Object.freeze(
   new (class extends BaseGameState {
     gameStateMessage = () => "Congratulations, you win!"
+    gameOver = () => true
   })()
 )
 
